@@ -50,6 +50,8 @@ android {
 }
 
 dependencies {
+    implementation("io.insert-koin:koin-android:3.5.0")
+
     implementation(project(":data"))
     val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")

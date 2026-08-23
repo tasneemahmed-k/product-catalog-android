@@ -1,17 +1,21 @@
 package com.example.data.di
 
 import com.example.data.remote.api.ProductApiService
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object NetworkModule {
-    private const val BASE_URL = "https://fakestoreapi.com/"
 
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+val networkModule = module {
 
-    val productApiService: ProductApiService =
-        retrofit.create(ProductApiService::class.java)
+    single {
+        Retrofit.Builder()
+            .baseUrl("https://fakestoreapi.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    single<ProductApiService> {
+        get<Retrofit>().create(ProductApiService::class.java)
+    }
 }
