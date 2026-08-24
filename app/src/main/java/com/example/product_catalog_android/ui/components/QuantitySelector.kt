@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -55,10 +56,9 @@ fun QuantitySelector(
                     }
                 }
             ) {
-                Text(
-                    text = "−",
-                    fontSize = 28.sp,
-                    color = Color.Black
+                Icon(
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "Decrease quantity"
                 )
             }
 
