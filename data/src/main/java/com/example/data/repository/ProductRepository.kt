@@ -9,7 +9,8 @@ class ProductRepository(private val apiService: ProductApiService) {
 
     suspend fun getProducts(): DataResult<List<Product>> {
         return try {
-            val products = apiService.getProducts()
+            val response = apiService.getProducts()
+            val products = response.products
             if (products.isEmpty())
                 DataResult.Success(emptyList())
             else
