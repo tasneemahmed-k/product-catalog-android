@@ -25,7 +25,9 @@ class ProductDetailsActivity : ComponentActivity() {
                 viewModel.uiState.collectAsStateWithLifecycle()
 
             ProductDetailsScreen(
-                uiState = uiState.value
+                uiState = uiState.value, onBackClick = {
+                    finish()
+                }
             )
         }
     }
