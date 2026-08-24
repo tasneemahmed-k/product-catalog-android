@@ -12,9 +12,6 @@ import java.io.IOException
 class ProductRepository(private val apiService: ProductApiService) {
 
     suspend fun getProducts(): DataResult<List<Product>> {
-//        return DataResult.Error(
-//            DataError.ProductNotFound
-//        )
 
         return try {
             val response = apiService.getProducts()
