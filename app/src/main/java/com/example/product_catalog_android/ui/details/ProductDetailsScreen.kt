@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
@@ -23,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +48,8 @@ import com.example.product_catalog_android.ui.components.QuantitySelector
 
 @Composable
 fun ProductDetailsScreen(
-    uiState: ProductDetailsUiState
+    uiState: ProductDetailsUiState,
+    onBackClick: () -> Unit
 ) {
     when (uiState) {
 
@@ -56,7 +59,7 @@ fun ProductDetailsScreen(
 
         is ProductDetailsUiState.Success -> {
             ProductDetailsContent(
-                product = uiState.product
+                product = uiState.product, onBackClick = onBackClick
             )
         }
 
@@ -103,7 +106,8 @@ private fun ErrorContent(
 
 @Composable
 private fun ProductDetailsContent(
-    product: Product
+    product: Product,
+    onBackClick: () -> Unit
 ) {
     var selectedColor by remember {
         mutableStateOf(Color.Black)
@@ -126,6 +130,19 @@ private fun ProductDetailsContent(
                 contentDescription = product.title,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            IconButton(
+                onClick = onBackClick, modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopStart)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    contentDescription = "Go back",
+                    tint = Color.Black, modifier = Modifier.size(32.dp)
+
+                )
+            }
         }
 
         Spacer(modifier = Modifier.size(16.dp))
@@ -228,7 +245,7 @@ private fun ProductDetailsContent(
                     .background(colorResource(id = R.color.light_gray))
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
