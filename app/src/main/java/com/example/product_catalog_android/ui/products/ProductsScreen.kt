@@ -34,6 +34,8 @@ import com.example.product_catalog_android.ui.components.ProductSearchBar
 @Composable
 fun ProductsScreen(
     uiState: ProductsUiState,
+    searchText: String,
+    onSearchTextChanged: (String) -> Unit,
     onProductClick: (Int) -> Unit,
     onRefresh: () -> Unit
 ) {
@@ -41,8 +43,6 @@ fun ProductsScreen(
         refreshing = uiState is ProductsUiState.Loading,
         onRefresh = onRefresh
     )
-
-    var searchText by remember { mutableStateOf("") }
 
     when (uiState) {
         ProductsUiState.Loading -> {
@@ -53,8 +53,8 @@ fun ProductsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
                     .pullRefresh(refreshState)
+                    .padding(8.dp)
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
                     Text(
@@ -71,7 +71,7 @@ fun ProductsScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    ProductSearchBar(value = searchText, onValueChange = { searchText = it })
+                    ProductSearchBar(value = searchText, onValueChange = onSearchTextChanged)
 
                     Spacer(modifier = Modifier.height(32.dp))
 
