@@ -2,6 +2,7 @@ package com.example.product_catalog_android.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.model.Product
 import com.example.data.repository.ProductRepository
 import com.example.data.result.DataError
 import com.example.data.result.DataResult
@@ -17,6 +18,13 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
 
     val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
 
+    private var allProducts: List<Product> = emptyList()
+
+    private val _searchText = MutableStateFlow("")
+
+    val searchText: StateFlow<String> =
+        _searchText.asStateFlow()
+
     init {
         loadProducts()
     }
@@ -28,6 +36,7 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
             when (val result = repository.getProducts()) {
 
                 is DataResult.Success -> {
+                    allProducts = result.data
                     if (result.data.isEmpty()) {
                         _uiState.value = ProductsUiState.Empty
                     } else {
@@ -73,5 +82,30 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
             DataError.Unknown ->
                 "Something went wrong. Please try again."
         }
+    }
+
+    fun onSearchTextChanged(text: String) {
+
+        _searchText.value = text
+
+        val filteredProducts = allProducts.filter { product ->
+
+            product.title.contains(
+                text,
+                ignoreCase = true
+            ) ||
+
+                    product.category.contains(
+                        text,
+                        ignoreCase = true
+                    )
+        }
+
+        _uiState.value =
+            if (filteredProducts.isEmpty()) {
+                ProductsUiState.Empty
+            } else {
+                ProductsUiState.Success(filteredProducts)
+            }
     }
 }
