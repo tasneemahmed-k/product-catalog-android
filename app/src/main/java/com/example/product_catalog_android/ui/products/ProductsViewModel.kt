@@ -44,4 +44,8 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
             }
         }
     }
+
+    fun refreshProducts() {
+        loadProducts()
+    }
 }
