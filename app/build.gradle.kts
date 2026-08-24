@@ -53,6 +53,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.compose.material:material:1.5.4")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     api(project(":data"))
     val nav_version = "2.7.4"
