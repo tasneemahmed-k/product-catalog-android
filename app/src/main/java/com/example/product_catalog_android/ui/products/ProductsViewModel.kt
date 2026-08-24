@@ -6,6 +6,7 @@ import com.example.data.model.Product
 import com.example.data.repository.ProductRepository
 import com.example.data.result.DataError
 import com.example.data.result.DataResult
+import com.example.product_catalog_android.ui.common.getErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,32 +57,6 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
 
     fun refreshProducts() {
         loadProducts()
-    }
-
-    private fun getErrorMessage(error: DataError): String {
-        return when (error) {
-
-            DataError.NoInternet ->
-                "No internet connection. Please check your connection."
-
-            is DataError.ServerError ->
-                "The server is currently unavailable. Please try again later."
-
-            DataError.SerializationError ->
-                "We couldn't read the product information."
-
-            DataError.EmptyResponse ->
-                "No products are available right now."
-
-            DataError.ProductNotFound ->
-                "The product could not be found."
-
-            DataError.InvalidProduct ->
-                "The product information is invalid."
-
-            DataError.Unknown ->
-                "Something went wrong. Please try again."
-        }
     }
 
     fun onSearchTextChanged(text: String) {

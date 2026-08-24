@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.ProductRepository
 import com.example.data.result.DataResult
+import com.example.product_catalog_android.ui.common.getErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +43,7 @@ class ProductDetailsViewModel(
                 is DataResult.Error -> {
                     _uiState.value =
                         ProductDetailsUiState.Error(
-                            result.exception.toString() ?: "Something went wrong."
+                            getErrorMessage(result.exception)
                         )
                 }
             }
