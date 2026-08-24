@@ -53,8 +53,8 @@ fun ProductsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
                     .pullRefresh(refreshState)
+                    .padding(8.dp)
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
                     Text(
