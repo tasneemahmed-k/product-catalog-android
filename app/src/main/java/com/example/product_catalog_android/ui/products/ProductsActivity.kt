@@ -19,6 +19,7 @@ class ProductsActivity : ComponentActivity() {
 //            uiState is State Flow and compose needs to collect that Flow and react whenever it changes
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             val searchText by viewModel.searchText.collectAsState()
+            val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
             ProductsScreen(
                 uiState.value,
@@ -32,6 +33,8 @@ class ProductsActivity : ComponentActivity() {
 
                     startActivity(intent)
                 },
+
+                isRefreshing = isRefreshing,
                 onRefresh = viewModel::refreshProducts,
                 searchText = searchText,
                 onSearchTextChanged = viewModel::onSearchTextChanged,

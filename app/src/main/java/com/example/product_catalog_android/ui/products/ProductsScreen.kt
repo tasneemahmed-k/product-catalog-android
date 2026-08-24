@@ -17,10 +17,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,67 +30,69 @@ import com.example.product_catalog_android.ui.components.ProductSearchBar
 @Composable
 fun ProductsScreen(
     uiState: ProductsUiState,
+    isRefreshing: Boolean,
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
     onProductClick: (Int) -> Unit,
     onRefresh: () -> Unit
 ) {
     val refreshState = rememberPullRefreshState(
-        refreshing = uiState is ProductsUiState.Loading,
+        refreshing = isRefreshing,
         onRefresh = onRefresh
     )
 
-    when (uiState) {
-        ProductsUiState.Loading -> {
-            LoadingContent()
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(refreshState)
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(
+                text = "New Arrivals",
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.ExtraBold,
+            )
+            Text(
+                text = "Discover our latest collection",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray
+            )
 
-        is ProductsUiState.Success -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(refreshState)
-                    .padding(8.dp)
-            ) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    Text(
-                        text = "New Arrivals",
-                        style = MaterialTheme.typography.displaySmall,
-                        fontWeight = FontWeight.ExtraBold,
-                    )
-                    Text(
-                        text = "Discover our latest collection",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Gray
+            Spacer(modifier = Modifier.height(16.dp))
 
-                    )
+            ProductSearchBar(value = searchText, onValueChange = onSearchTextChanged)
 
-                    Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-                    ProductSearchBar(value = searchText, onValueChange = onSearchTextChanged)
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (uiState) {
+                    ProductsUiState.Loading -> {
+                        LoadingContent()
+                    }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    is ProductsUiState.Success -> {
+                        ProductsList(
+                            products = uiState.products,
+                            onProductClick = onProductClick,
+                        )
+                    }
 
-                    ProductsList(
-                        products = uiState.products,
-                        onProductClick,
-                    )
+                    ProductsUiState.Empty -> {
+                        EmptyContent()
+                    }
+
+                    is ProductsUiState.Error -> {
+                        ErrorContent(message = uiState.message)
+                    }
                 }
-                PullRefreshIndicator(
-                    refreshing = uiState is ProductsUiState.Loading,
-                    state = refreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                )
             }
         }
 
-        ProductsUiState.Empty -> {
-            EmptyContent()
-        }
-
-        is ProductsUiState.Error -> {
-            ErrorContent(message = uiState.message)
-        }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = refreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 

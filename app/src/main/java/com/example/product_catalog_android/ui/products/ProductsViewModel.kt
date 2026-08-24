@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.model.Product
 import com.example.data.repository.ProductRepository
-import com.example.data.result.DataError
 import com.example.data.result.DataResult
 import com.example.product_catalog_android.ui.common.getErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +18,9 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
 
     val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     private var allProducts: List<Product> = emptyList()
 
     private val _searchText = MutableStateFlow("")
@@ -27,12 +29,16 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
         _searchText.asStateFlow()
 
     init {
-        loadProducts()
+        loadProducts(isInitialLoad = true)
     }
 
-    private fun loadProducts() {
+    private fun loadProducts(isInitialLoad: Boolean) {
         viewModelScope.launch {
-            _uiState.value = ProductsUiState.Loading
+            if (isInitialLoad) {
+                _uiState.value = ProductsUiState.Loading
+            } else {
+                _isRefreshing.value = true
+            }
 
             when (val result = repository.getProducts()) {
 
@@ -52,11 +58,13 @@ class ProductsViewModel(private val repository: ProductRepository) : ViewModel()
                     )
                 }
             }
+
+            _isRefreshing.value = false
         }
     }
 
     fun refreshProducts() {
-        loadProducts()
+        loadProducts(isInitialLoad = false)
     }
 
     fun onSearchTextChanged(text: String) {
