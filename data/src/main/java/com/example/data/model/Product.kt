@@ -4,13 +4,15 @@ data class Product(
     val id: Int,
     val title: String,
     val price: Double,
+    val stock: Int,
     val description: String,
     val category: String,
-    val image: String,
-    val rating: Rating
+    val images: List<String>,
+    val rating: Double,
+    val reviews: List<Review>
 )
 
-data class Rating(
-    val rate: Double,
-    val count: Int
+data class Review(
+    val rating: Int,
+    val reviewerName: String
 )
