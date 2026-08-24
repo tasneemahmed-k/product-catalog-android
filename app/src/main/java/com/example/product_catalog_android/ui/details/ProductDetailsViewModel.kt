@@ -42,7 +42,7 @@ class ProductDetailsViewModel(
                 is DataResult.Error -> {
                     _uiState.value =
                         ProductDetailsUiState.Error(
-                            result.exception.message ?: "Something went wrong."
+                            result.exception.toString() ?: "Something went wrong."
                         )
                 }
             }
